@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitcoin per le Organizzazioni Non Profit — Guida alla Libertà Finanziaria</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #FF7A00;
+    --gold-light: #FF9933;
+    --gold-dim: rgba(255,122,0,0.15);
+    --black: #0A0A0A;
+    --dark: #111111;
+    --surface: #181818;
+    --surface2: #222222;
+    --border: rgba(255,122,0,0.2);
+    --text: #E8E0D0;
+    --text-muted: #888;
+    --white: #FAFAF8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 80px 24px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(247,147,26,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(247,147,26,0.04) 0%, transparent 60%);
+  }
+
+  .hero-rings {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    animation: pulse-ring 8s ease-in-out infinite;
+  }
+  .ring:nth-child(1) { width: 300px; height: 300px; animation-delay: 0s; }
+  .ring:nth-child(2) { width: 500px; height: 500px; animation-delay: 1s; opacity: 0.6; }
+  .ring:nth-child(3) { width: 700px; height: 700px; animation-delay: 2s; opacity: 0.3; }
+  .ring:nth-child(4) { width: 900px; height: 900px; animation-delay: 3s; opacity: 0.15; }
+
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: var(--base-opacity, 0.5); }
+    50% { transform: scale(1.03); }
+  }
+
+  .hero-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    background: var(--gold-dim);
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.08;
+    color: var(--white);
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+    opacity: 0;
+    max-width: 820px;
+  }
+
+  .hero h1 span { color: var(--gold); }
+
+  .hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-top: 20px;
+    max-width: 560px;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+    opacity: 0;
+  }
+
+  .hero-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+    opacity: 0;
+  }
+
+  .hero-source a { color: var(--gold); text-decoration: none; }
+
+  .hero-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 48px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+    opacity: 0;
+  }
+
+  .nav-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    text-decoration: none;
+    background: var(--surface);
+    transition: all 0.25s;
+    cursor: pointer;
+    background: none;
+  }
+  .nav-pill:hover { color: var(--gold); border-color: var(--gold); background: var(--gold-dim); }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeUp 1s ease 1s forwards;
+    opacity: 0;
+    z-index: 1;
+  }
+  .scroll-hint span { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scroll-pulse 2s ease-in-out infinite; }
+  @keyframes scroll-pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 80px 0; border-top: 1px solid var(--border); }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 80px; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 28px;
+    line-height: 1.2;
+  }
+
+  /* CALLOUT BOX */
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--gold);
+    padding: 24px 28px;
+    border-radius: 0 8px 8px 0;
+    margin: 32px 0;
+    font-style: italic;
+    color: var(--text);
+    position: relative;
+  }
+  .callout-icon { font-size: 1.4rem; margin-bottom: 8px; }
+
+  /* QUOTE */
+  .quote-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin: 36px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-block::before {
+    content: '\201C';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem;
+    color: var(--gold-dim);
+    line-height: 1;
+  }
+  .quote-text { font-size: 1.15rem; font-style: italic; position: relative; z-index: 1; color: var(--white); }
+  .quote-author { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); margin-top: 16px; letter-spacing: 0.1em; }
+
+  /* REPRESSION GRID */
+  .repression-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .repression-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .repression-card:hover { border-color: var(--gold); transform: translateY(-3px); background: var(--surface2); }
+  .repression-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .repression-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .repression-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ATTRIBUTES */
+  .attributes-list { margin-top: 24px; display: flex; flex-direction: column; gap: 4px; }
+
+  .attr-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .attr-item:hover { border-color: rgba(247,147,26,0.4); }
+  .attr-item.open { border-color: var(--gold); }
+
+  .attr-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .attr-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .attr-title-text { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: var(--white); flex: 1; }
+  .attr-arrow { color: var(--text-muted); font-size: 1rem; transition: transform 0.3s; flex-shrink: 0; }
+  .attr-item.open .attr-arrow { transform: rotate(90deg); color: var(--gold); }
+
+  .attr-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .attr-item.open .attr-body { max-height: 400px; }
+  .attr-content { padding: 0 22px 20px 66px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* FREEDOM MONEY */
+  .freedom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .freedom-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.25s;
+  }
+  .freedom-item:hover { border-color: var(--gold); }
+  .freedom-check { color: var(--gold); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .freedom-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* CASE STUDIES */
+  .cases-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .case-tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .case-tab.active, .case-tab:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+  .case-panel { display: none; animation: fadeIn 0.4s ease; }
+  .case-panel.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .case-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px;
+  }
+  .case-country {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .case-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .case-body { font-size: 0.92rem; color: var(--text-muted); line-height: 1.8; }
+  .case-body p + p { margin-top: 14px; }
+  .case-stat {
+    display: inline-block;
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    margin: 6px 4px 6px 0;
+  }
+
+  /* RISKS */
+  .risks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .risk-card {
+    background: var(--surface);
+    border: 1px solid rgba(200, 80, 60, 0.25);
+    border-radius: 10px;
+    padding: 24px;
+    transition: border-color 0.25s;
+  }
+  .risk-card:hover { border-color: rgba(200, 80, 60, 0.6); }
+  .risk-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .risk-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #E06060; margin-bottom: 10px; }
+  .risk-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* MYTHS */
+  .myths-list { display: flex; flex-direction: column; gap: 4px; margin-top: 24px; }
+  .myth-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .myth-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .myth-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(200, 80, 60, 0.15);
+    border: 1px solid rgba(200, 80, 60, 0.3);
+    color: #E06060;
+    padding: 3px 8px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .myth-question { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); flex: 1; }
+  .myth-arrow { color: var(--text-muted); transition: transform 0.3s; flex-shrink: 0; }
+  .myth-item.open .myth-arrow { transform: rotate(90deg); color: var(--gold); }
+  .myth-item.open { border-color: rgba(247,147,26,0.3); }
+  .myth-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .myth-item.open .myth-body { max-height: 400px; }
+  .myth-content { padding: 0 22px 20px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 16px; }
+
+  /* TOOLS */
+  .tools-categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .tool-filter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tool-filter.active, .tool-filter:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    transition: all 0.25s;
+  }
+  .tool-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .tool-card[data-hidden="true"] { display: none; }
+  .tool-category-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .tool-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--white); margin-bottom: 8px; }
+  .tool-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; }
+  .tool-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .tool-link:hover { border-color: var(--gold); }
+
+  /* BEST PRACTICES */
+  .practices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+  }
+  .practice-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .practice-item:hover { border-color: var(--gold); }
+  .practice-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .practice-content { flex: 1; }
+  .practice-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 6px; }
+  .practice-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* BITCOIN BASICS */
+  .basics-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .basics-tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .basics-tab.active { background: var(--surface2); color: var(--white); border-color: rgba(247,147,26,0.4); }
+  .basics-tab:hover { color: var(--gold); }
+  .basics-panel { display: none; }
+  .basics-panel.active { display: block; animation: fadeIn 0.35s ease; }
+
+  /* COMPARISON TABLE */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    font-size: 0.88rem;
+  }
+  .comparison-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .comparison-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid rgba(247,147,26,0.08);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+  .comparison-table tr:hover td { background: rgba(247,147,26,0.03); }
+  .comparison-table td:first-child { color: var(--white); font-weight: 400; }
+  .yes { color: #6FCF8A; }
+  .no { color: #E06060; }
+  .partial { color: var(--gold); }
+
+  /* PROGRESS / STAT BARS */
+  .stat-row { margin: 16px 0; }
+  .stat-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .stat-bar { background: var(--surface); border-radius: 3px; height: 4px; overflow: hidden; }
+  .stat-fill { height: 100%; background: linear-gradient(to right, var(--gold), var(--gold-light)); border-radius: 3px; transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 60px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .footer-text { font-size: 0.85rem; color: var(--text-muted); max-width: 480px; margin: 0 auto 20px; }
+  .footer-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.15em; }
+  .footer-source a { color: var(--gold); text-decoration: none; }
+
+  /* STICKY HEADER */
+  .sticky-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sticky-header.visible { transform: translateY(0); }
+  .sticky-logo { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; }
+  .sticky-nav { display: flex; gap: 20px; }
+  .sticky-nav a { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+  .sticky-nav a:hover { color: var(--gold); }
+
+  /* UTILITY */
+  p { margin-bottom: 18px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--white); font-weight: 400; }
+
+  .highlight { color: var(--gold); }
+  .mono { font-family: 'DM Mono', monospace; font-size: 0.85em; background: var(--surface); padding: 2px 6px; border-radius: 3px; }
+
+  /* INTERSECTION OBSERVER ANIMATIONS */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 40px 0;
+  }
+
+  /* INTRO BOX */
+  .intro-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px;
+    margin: 36px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-box::after {
+    content: '₿';
+    position: absolute;
+    right: -20px;
+    bottom: -30px;
+    font-size: 12rem;
+    color: rgba(247,147,26,0.04);
+    font-family: 'Playfair Display', serif;
+    pointer-events: none;
+  }
+
+  /* OBJECTIVES LIST */
+  .objectives { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .objectives li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .objectives li:hover { border-color: rgba(247,147,26,0.3); }
+  .objectives li::before { content: '→'; color: var(--gold); flex-shrink: 0; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .repression-grid, .risks-grid, .freedom-grid, .tools-grid, .practices-grid { grid-template-columns: 1fr; }
+    .case-card { padding: 24px; }
+    .sticky-nav { display: none; }
+    .attr-content { padding-left: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="sticky-header" id="stickyHeader">
+  <div class="sticky-logo"><img src="avatar.png" alt="21 Milioni" style="height:28px; width:auto; margin-right:8px;" /> 21 Milioni</div>
+  <nav class="sticky-nav">
+    <a href="#intro">Intro</a>
+    <a href="#repression">Repressione</a>
+    <a href="#fondamenti">Fondamenti</a>
+    <a href="#pratica">Pratica</a>
+    <a href="#casistiche">Casi</a>
+    <a href="#rischi">Rischi</a>
+    <a href="#strumenti">Strumenti</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+  <div style="margin-bottom:20px;"><img src="avatar.png" alt="21 Milioni di Chiacchere" style="height:120px; width:auto;" /></div>
+  <div class="hero-badge">Bitcoin per le Organizzazioni Non Profit</div>
+  <h1><span>Bitcoin</span> per le Organizzazioni<br>Non Profit</h1>
+  <p class="hero-subtitle">Una guida per aiutare il tuo movimento a conquistare la libertà finanziaria — anche sotto i regimi autoritari</p>
+  <p class="hero-source">Traduzione dell'articolo originale: <a href="https://hrf.org/latest/bitcoin-for-nonprofits-a-guide-to-help-your-movement-achieve-financial-freedom/" target="_blank">hrf.org ↗</a></p>
+  <nav class="hero-nav">
+    <a class="nav-pill" href="#intro">Introduzione</a>
+    <a class="nav-pill" href="#repression">Repressione Finanziaria</a>
+    <a class="nav-pill" href="#fondamenti">Fondamenti Bitcoin</a>
+    <a class="nav-pill" href="#pratica">Uso Pratico</a>
+    <a class="nav-pill" href="#casistiche">Casi Studio</a>
+    <a class="nav-pill" href="#rischi">Rischi</a>
+    <a class="nav-pill" href="#strumenti">Strumenti</a>
+  </nav>
+  <div class="scroll-hint">
+    <span>Scorri</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="section" id="intro">
+  <div class="container">
+    <div class="section-label">01 · Introduzione</div>
+    <h2 class="section-title fade-in-up">Chi può usare questa guida</h2>
+
+    <div class="intro-box fade-in-up">
+      <p>Nell'inverno del 2018, <strong>Anna Chekhovich</strong> si trovava negli uffici moscoviti della Fondazione Anti-Corruzione quando arrivò la telefonata. I loro conti bancari erano stati congelati. Tutti, dall'oggi al domani, per ordine del Cremlino. Per la maggior parte delle organizzazioni sarebbe stata una condanna a morte: niente stipendi, niente spese legali, niente budget operativo.</p>
+      <p>Ma anni prima, quando il clima politico si stava già oscurando, la fondazione aveva iniziato silenziosamente ad accettare donazioni in Bitcoin. Era una precauzione, quasi un ripensamento all'epoca, ma divenne uno dei fattori chiave che la tenne in vita.</p>
+      <p><strong>Questa guida esiste affinché la tua organizzazione possa fare lo stesso</strong> — diventare più resiliente e indipendente di fronte alla repressione finanziaria dei regimi autoritari.</p>
+    </div>
+
+    <p class="fade-in-up">Che tu sia a Caracas, Nairobi o Nanchino, questa guida aiuterà la tua organizzazione a prendere il controllo dei propri fondi, transazioni e risparmi — liberandoti dalla frustrazione di bonifici bancari, pagamenti rifiutati, ritardi e governi autoritari che ti dicono "No, non puoi usare i tuoi soldi così."</p>
+
+    <div class="callout fade-in-up">
+      <div class="callout-icon">⚡</div>
+      La repressione finanziaria non è accidentale. Il denaro elettronico fiat tradizionale fluisce attraverso istituzioni che i governi controllano. Quando un regime decide che una causa è scomoda o minacciosa, spegne il rubinetto del denaro. Fino ad oggi, le ONG non avevano buone alternative. Oggi, <strong>esiste un Piano ₿</strong>.
+    </div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.3rem; margin: 32px 0 16px;">Dopo aver letto questa guida, la tua ONG sarà in grado di:</h3>
+    <ul class="objectives fade-in-up">
+      <li>Capire cos'è Bitcoin e quando è utile</li>
+      <li>Ricevere, conservare e inviare bitcoin con strumenti auto-custodia</li>
+      <li>Scegliere modelli appropriati di custodia, sicurezza e governance</li>
+      <li>Accedere e uscire da Bitcoin tramite canali di ingresso e uscita idonei</li>
+      <li>Decidere come Bitcoin si inserisce nella tua missione e nel tuo contesto</li>
+    </ul>
+
+    <div class="quote-block fade-in-up" style="margin-top:40px;">
+      <p class="quote-text">Bitcoin è infrastruttura per la dignità umana. Dà alle persone, e alle organizzazioni che le servono, un modo per preservare il valore del loro tempo e del loro lavoro in una moneta che non può essere inflazionata o facilmente spenta.</p>
+      <p class="quote-author">— Ella Hough, Junior Fellow, Cornell Brooks School Tech Policy Institute</p>
+    </div>
+  </div>
+</section>
+
+<!-- REPRESSION -->
+<section class="section" id="repression">
+  <div class="container">
+    <div class="section-label">02 · Come Bitcoin aiuta</div>
+    <h2 class="section-title fade-in-up">Repressione Finanziaria dei Regimi Autoritari</h2>
+
+    <p class="fade-in-up">Man mano che i sistemi finanziari sono diventati più digitali e centralizzati, sono diventati più facili da monitorare, pressare e controllare. La repressione oggi non è applicata solo da polizia politicizzata e tribunali truccati: è applicata attraverso infrastrutture finanziarie corrotte.</p>
+
+    <div class="repression-grid fade-in-up">
+      <div class="repression-card">
+        <div class="repression-icon">👁️</div>
+        <div class="repression-title">Sorveglianza</div>
+        <div class="repression-text">I regimi autoritari pressano banche e piattaforme di pagamento per monitorare le ONG, segnalare l'attività come "sospetta" e incanalare i dati finanziari alle autorità. In Cina il sistema del credito sociale si estende alle transazioni finanziarie.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">🚫</div>
+        <div class="repression-title">Censura</div>
+        <div class="repression-text">I regimi bloccano le donazioni o negano silenziosamente le transazioni. Un bonifico che dovrebbe richiedere ore rimane in limbo per settimane. Una donazione ricorrente da un sostenitore in esilio viene rifiutata in silenzio.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">🔒</div>
+        <div class="repression-title">Esclusione</div>
+        <div class="repression-text">I governi autoritari etichettano gruppi come "estremisti" o "agenti stranieri" e li espellono dal sistema finanziario formale. La legge russa sugli "agenti stranieri" ha chiuso dozzine di organizzazioni della società civile.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">📉</div>
+        <div class="repression-title">Svalutazione Valutaria</div>
+        <div class="repression-text">La cattiva gestione economica e l'iperinflazione distruggono i risparmi. In Venezuela (2016-2019), il bolívar perse così tanto valore che i prezzi cambiavano tra mattina e pomeriggio.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">❄️</div>
+        <div class="repression-title">Congelamento Conti</div>
+        <div class="repression-text">I regimi immobilizzano o confiscano fondi per bloccare le operazioni. In Bielorussia, dopo il 2020, il regime di Lukashenko congelò i conti di organizzazioni per i diritti umani entro ore dall'inizio delle manifestazioni.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">💱</div>
+        <div class="repression-title">Controlli sui Capitali</div>
+        <div class="repression-text">La società civile è intrappolata in valute locali in collasso con inflazione a tre cifre. In Argentina, Turchia e Nigeria, controlli valutari impediscono alle organizzazioni di detenere dollari o euro.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">📋</div>
+        <div class="repression-title">Molestie Normative</div>
+        <div class="repression-text">Le regole cambiano senza preavviso, le approvazioni si bloccano, le violazioni tecniche vengono inventate. L'obiettivo non è l'applicazione, ma l'esaurimento: tenere un'organizzazione così occupata da non poter fare il suo vero lavoro.</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">🪪</div>
+        <div class="repression-title">Controlli Identità Digitale</div>
+        <div class="repression-text">I sistemi di pagamento collegati all'identità vengono selettivamente limitati. In India, il governo ha usato il FCRA per revocare le licenze di migliaia di ONG, tagliandole di fatto dalle donazioni estere.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.5rem; margin-bottom:20px;">Perché Bitcoin è "Denaro della Libertà"</h3>
+
+    <p class="fade-in-up">Bitcoin funziona su un sistema peer-to-peer globale. Nessuna banca centrale, nessuna azienda, nessuna autorità approva le transazioni o detiene i conti. Gli utenti controllano i propri fondi e si inviano denaro direttamente tramite internet.</p>
+
+    <div class="freedom-grid fade-in-up">
+      <div class="freedom-item">
+        <span class="freedom-check">✓</span>
+        <span class="freedom-text"><strong>Contro la sorveglianza:</strong> Le transazioni Bitcoin, fatte correttamente, proteggono la privacy finanziaria</span>
+      </div>
+      <div class="freedom-item">
+        <span class="freedom-check">✓</span>
+        <span class="freedom-text"><strong>Contro la censura:</strong> Nessuno può bloccare una donazione Bitcoin o rifiutare un trasferimento</span>
+      </div>
+      <div class="freedom-item">
+        <span class="freedom-check">✓</span>
+        <span class="freedom-text"><strong>Contro l'esclusione:</strong> Chiunque può usare la rete, indipendentemente da genere, credenze o status</span>
+      </div>
+      <div class="freedom-item">
+        <span class="freedom-check">✓</span>
+        <span class="freedom-text"><strong>Contro il crollo valutario:</strong> I fondi sono conservati in moneta indipendente dalle valute locali in fallimento</span>
+      </div>
+      <div class="freedom-item">
+        <span class="freedom-check">✓</span>
+        <span class="freedom-text"><strong>Contro il congelamento:</strong> Bitcoin in auto-custodia è molto più resistente al congelamento nei canali bancari tradizionali</span>
+      </div>
+      <div class="freedom-item">
+        <span class="freedom-check">✓</span>
+        <span class="freedom-text"><strong>Contro i controlli capitali:</strong> Può essere trasferito attraverso i confini senza permesso di alcun sistema bancario</span>
+      </div>
+    </div>
+
+    <div class="callout fade-in-up" style="margin-top:32px;">
+      <strong>₿ Dato chiave:</strong> Secondo uno studio del 2026 della Cornell University, più del <span class="highlight">20%</span> della popolazione in paesi come El Salvador, Emirati Arabi, Turchia e Venezuela ha già usato Bitcoin.
+    </div>
+  </div>
+</section>
+
+<!-- FONDAMENTI -->
+<section class="section" id="fondamenti">
+  <div class="container">
+    <div class="section-label">03 · Fondamenti Bitcoin</div>
+    <h2 class="section-title fade-in-up">Come funziona Bitcoin</h2>
+
+    <div class="basics-tabs fade-in-up">
+      <button class="basics-tab active" onclick="switchBasics('what')">Cos'è Bitcoin?</button>
+      <button class="basics-tab" onclick="switchBasics('wallet')">Il Portafoglio</button>
+      <button class="basics-tab" onclick="switchBasics('receive')">Ricevere</button>
+      <button class="basics-tab" onclick="switchBasics('send')">Inviare</button>
+      <button class="basics-tab" onclick="switchBasics('compare')">Confronto</button>
+    </div>
+
+    <div id="basics-what" class="basics-panel active">
+      <p>Bitcoin è <strong>denaro digitale</strong> che esiste come rete globale piuttosto che all'interno di una banca centralizzata. Nessuna azienda o governo lo gestisce. Decine di migliaia di computer indipendenti mantengono il sistema insieme — da data center in Texas e Islanda a piccole macchine in scantinati ad Accra e São Paulo.</p>
+      <p>Quando qualcuno invia bitcoin, il pagamento viene registrato su un registro pubblico condiviso chiamato <span class="mono">blockchain</span>. Questo registro non è controllato da nessuna singola istituzione: è mantenuto collettivamente da persone in tutto il mondo.</p>
+      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin:28px 0;">
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; text-align:center;">
+          <div style="font-family:'DM Mono',monospace; font-size:1.4rem; color:var(--gold); margin-bottom:6px;">21M</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Bitcoin totali che esisteranno mai</div>
+        </div>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; text-align:center;">
+          <div style="font-family:'DM Mono',monospace; font-size:1.4rem; color:var(--gold); margin-bottom:6px;">100M</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Satoshi (sats) in 1 Bitcoin</div>
+        </div>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; text-align:center;">
+          <div style="font-family:'DM Mono',monospace; font-size:1.4rem; color:var(--gold); margin-bottom:6px;">95%+</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Del totale già in circolazione</div>
+        </div>
+      </div>
+      <p>Bitcoin è l'unico asset digitale veramente scarso. È l'unica moneta nella storia con una fornitura che <strong>nessuno può inflazionare</strong> — né un presidente, né un banchiere centrale, né un dittatore.</p>
+    </div>
+
+    <div id="basics-wallet" class="basics-panel">
+      <p>Un <strong>portafoglio Bitcoin</strong> è un'app sul telefono o sul computer, o un piccolo dispositivo fisico simile a una chiavetta USB, che ti permette di ricevere, conservare e inviare fondi sulla rete Bitcoin.</p>
+      <div class="callout">
+        <strong>Auto-custodia vs Custodia centralizzata:</strong><br>
+        Con una banca, la banca — e quindi lo stato — controlla l'accesso. Un direttore di banca può congelare il tuo conto con una telefonata. Un portafoglio Bitcoin ti mette in controllo. Tu possiedi le credenziali. Questo si chiama <strong>auto-custodia</strong>.
+      </div>
+      <p>Quando crei un portafoglio Bitcoin, genera una <strong>frase di recupero</strong> (seed phrase): una lista di 12 o 24 parole ordinarie che insieme formano la chiave per i tuoi bitcoin. Se il dispositivo viene perso o confiscato, la frase di recupero ti permette di ripristinare l'accesso su un nuovo dispositivo.</p>
+      <div style="background:rgba(200,80,60,0.08); border:1px solid rgba(200,80,60,0.3); border-radius:8px; padding:20px; margin-top:20px;">
+        <strong style="color:#E06060;">⚠️ Regola fondamentale:</strong>
+        <p style="margin-top:8px; font-size:0.9rem;">Proteggere la frase di recupero è la singola pratica di sicurezza più importante. Scrivila su carta o incidila nell'acciaio. Conservala in un posto sicuro. Se la perdi insieme al dispositivo, i tuoi bitcoin sono persi per sempre — non c'è assistenza clienti.</p>
+      </div>
+    </div>
+
+    <div id="basics-receive" class="basics-panel">
+      <p>Quando clicchi "ricevi bitcoin" in un portafoglio, genera una stringa di lettere e numeri: un <strong>indirizzo Bitcoin</strong>. Puoi darlo a chiunque voglia inviarti denaro.</p>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; margin:20px 0; font-family:'DM Mono',monospace; font-size:0.8rem; word-break:break-all; color:var(--gold);">
+        bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+      </div>
+      <p>I portafogli possono anche visualizzare la stringa come codice QR: un donatore scansiona semplicemente il codice e invia. Quando un donatore invia bitcoin al tuo indirizzo, arriva direttamente nel tuo portafoglio entro minuti. <strong>Nessuna banca coinvolta. Nessuna commissione di bonifico. Nessuna attesa di tre-cinque giorni lavorativi.</strong></p>
+      <div class="callout">
+        <strong>Privacy:</strong> Per ragioni di privacy, dovresti generare un nuovo indirizzo ogni volta che ricevi bitcoin. La maggior parte dei portafogli lo fa automaticamente. Se un'organizzazione usa un unico indirizzo statico per tutte le donazioni, chiunque può vedere il suo saldo totale e ogni transazione effettuata.
+      </div>
+    </div>
+
+    <div id="basics-send" class="basics-panel">
+      <p>Inviare Bitcoin è semplice. Il tuo portafoglio ti chiede di:</p>
+      <div style="display:flex; flex-direction:column; gap:10px; margin:20px 0;">
+        <div class="practice-item">
+          <div class="practice-num">1</div>
+          <div class="practice-content">
+            <div class="practice-title">Destinatario</div>
+            <div class="practice-desc">Inserisci l'indirizzo del destinatario o scansiona un codice QR</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div class="practice-num">2</div>
+          <div class="practice-content">
+            <div class="practice-title">Importo</div>
+            <div class="practice-desc">Scegli quanti bitcoin o satoshi inviare</div>
+          </div>
+        </div>
+        <div class="practice-item">
+          <div class="practice-num">3</div>
+          <div class="practice-content">
+            <div class="practice-title">Conferma</div>
+            <div class="practice-desc">Conferma il pagamento — si muove peer-to-peer attraverso la rete Bitcoin senza approvazione di alcuna banca</div>
+          </div>
+        </div>
+      </div>
+      <p>Non c'è numero di routing, nessun codice SWIFT, nessun intermediario che preleva una percentuale. Solo due portafogli e la rete aperta tra loro. Che il mittente sia a Oslo o Osaka, l'esperienza è identica.</p>
+    </div>
+
+    <div id="basics-compare" class="basics-panel">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Caratteristica</th>
+            <th>Bitcoin</th>
+            <th>Stablecoin</th>
+            <th>Cripto Tradizionali</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Controllo centralizzato</td>
+            <td class="no">No</td>
+            <td class="yes">Sì</td>
+            <td class="yes">Spesso sì</td>
+          </tr>
+          <tr>
+            <td>Conto congelabile</td>
+            <td class="no">No (auto-custodia)</td>
+            <td class="yes">Sì</td>
+            <td class="partial">Dipende</td>
+          </tr>
+          <tr>
+            <td>Fornitura fissa</td>
+            <td class="yes">Sì (21M)</td>
+            <td class="no">No</td>
+            <td class="no">Generalmente no</td>
+          </tr>
+          <tr>
+            <td>Resistenza alla censura</td>
+            <td class="yes">Alta</td>
+            <td class="no">Bassa</td>
+            <td class="partial">Media</td>
+          </tr>
+          <tr>
+            <td>Stabilità del prezzo</td>
+            <td class="partial">Volatile</td>
+            <td class="yes">Stabile (in dollari)</td>
+            <td class="partial">Volatile</td>
+          </tr>
+          <tr>
+            <td>Permissionless</td>
+            <td class="yes">Sì</td>
+            <td class="partial">Parziale</td>
+            <td class="partial">Dipende</td>
+          </tr>
+          <tr>
+            <td>Dipendenza da terzi</td>
+            <td class="no">No</td>
+            <td class="yes">Sì (emittente)</td>
+            <td class="yes">Sì (team sviluppo)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.5rem; margin-bottom:20px;">I 9 Attributi Fondamentali di Bitcoin</h3>
+    <p class="fade-in-up" style="color:var(--text-muted); margin-bottom:24px;">Questi attributi spiegano perché Bitcoin resiste al controllo finanziario autoritario. Clicca su ciascuno per espandere.</p>
+
+    <div class="attributes-list fade-in-up" id="attrList">
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">1</div>
+          <div class="attr-title-text">Mining di Bitcoin</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Non esiste un'autorità centrale che elabora le transazioni. I "miner" raccolgono le transazioni in attesa e competono per aggiungerle alla blockchain. In media ogni 10 minuti un miner "vince" e le transazioni vengono confermate. Poiché operano globalmente senza conoscersi, è impossibile censurare singole transazioni: qualcuno, da qualche parte, alla fine la elaborerà.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">2</div>
+          <div class="attr-title-text">Resistenza alla Censura</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Nel 2021 la Cina ha vietato il mining di Bitcoin dall'oggi al domani. L'hashrate (potenza computazionale totale) è crollato del 70%. Ma la rete non è morta. In pochi mesi i miner si erano trasferiti in Texas, Kazakhstan, Paraguay. L'hashrate ha recuperato e superato i livelli precedenti. La Cina ha cercato di uccidere Bitcoin, e Bitcoin si è semplicemente spostato. Questo è possibile perché Bitcoin non ha un operatore centrale.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">3</div>
+          <div class="attr-title-text">Aperto e Permissionless</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">In Afghanistan le donne erano escluse dal sistema bancario. In Togo agricoltori rurali non hanno mai avuto un conto bancario perché la filiale più vicina è a un giorno di viaggio. In Russia le organizzazioni "agenti stranieri" sono sistematicamente escluse. Bitcoin non si preoccupa di nulla di questo. Non ci sono approvazioni d'identità né guardiani istituzionali. Un piccolo gruppo togolese e una grande ONG internazionale accedono alla stessa rete finanziaria con le stesse regole.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">4</div>
+          <div class="attr-title-text">Senza Confini e Globale</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Bitcoin opera come una singola rete tra i paesi. Non appartiene a nessuna giurisdizione, zona valutaria o sistema bancario. Una donazione da Stoccolma a un'organizzazione per i diritti umani a Caracas segue lo stesso processo di una inviata dall'altra parte della strada. Non richiede banche corrispondenti, approvazioni cambio valuta o intermediari transfrontalieri. Il mismo pagamento che richiede settimane e $40 di commissioni via bonifico, con Bitcoin impiega minuti e costa una frazione di dollaro.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">5</div>
+          <div class="attr-title-text">Protezione contro l'Inflazione</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">In Venezuela il bolívaro collassò così violentemente che i prezzi cambiavano tra mattina e pomeriggio. L'FMI stimò che il tasso di inflazione superò il milione percento nel 2018. La fornitura totale di Bitcoin è fissa a 21 milioni di monete. L'emissione segue un calendario trasparente che nessun governo o banca centrale può cambiare. Nel breve termine il prezzo è volatile, ma in incrementi di cinque e dieci anni, il valore di bitcoin è aumentato drammaticamente rispetto a ogni valuta fiat sulla terra.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">6</div>
+          <div class="attr-title-text">Nessuna Sorveglianza Integrata</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">L'utilizzo di Bitcoin non richiede l'apertura di un conto legato a un'identità legale. I pagamenti si muovono tra indirizzi Bitcoin, non profili personali. Le transazioni sono pubbliche sulla blockchain, ma l'identità dell'utente non è automaticamente collegata. Se acquisti bitcoin su un exchange regolamentato con passaporto e carta di credito, la pista porta a te. Se li acquisti peer-to-peer con contanti, nessuno può sapere che sei stato tu.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">7</div>
+          <div class="attr-title-text">Pagamenti Veloci e Diretti</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Le transazioni Bitcoin si liquidano tradizionalmente entro minuti, ma possono essere istantanee usando la Lightning Network. Nessun "chiuso nei fine settimana", nessun ritardo di 2-3 giorni, nessuna festività bancaria. In situazioni urgenti — proteste a Minsk, un corridoio umanitario che si apre in Ucraina, un giornalista che necessita di fondi per una fuga d'emergenza — questa velocità può determinare se un'organizzazione continua a operare o fallisce aspettando fondi che arrivano troppo tardi.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">8</div>
+          <div class="attr-title-text">Sicuro per Design</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Bitcoin è protetto dalla crittografia e da una rete globalmente distribuita. Ogni transazione è verificata da migliaia di partecipanti indipendenti prima di essere aggiunta al registro pubblico. Una volta registrata, una transazione non può essere alterata silenziosamente o cancellata. Riscrivere la storia richiederebbe di sopraffare l'intera rete globale — il costo energetico supererebbe il PIL della maggior parte dei paesi.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">9</div>
+          <div class="attr-title-text">Resiliente sotto Pressione</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Bitcoin funziona in ambienti imperfetti. I fondi possono essere ripristinati da una frase di recupero anche se i dispositivi sono persi o confiscati. Una frase seed di 12 o 24 parole è recuperabile su praticamente qualsiasi portafoglio, su qualsiasi dispositivo, in qualsiasi paese. Quando la Cina ha chiuso il mining, la rete è migrata. Quando l'India ha vietato brevemente gli exchange, il trading peer-to-peer è aumentato. Quando la Nigeria ha limitato i bonifici bancari alle piattaforme Bitcoin, i cittadini hanno trovato alternative in giorni.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRATICA -->
+<section class="section" id="pratica">
+  <div class="container">
+    <div class="section-label">04 · Uso Pratico</div>
+    <h2 class="section-title fade-in-up">Bitcoin nella Pratica Quotidiana</h2>
+
+    <p class="fade-in-up">Il controllo sui fondi è il fondamento, ma utilizzare Bitcoin quotidianamente si riduce a alcune decisioni operative su come i fondi sono detenuti, accessibili e protetti. Ci sono tre aree da considerare: portafogli, custodia e exchange.</p>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.4rem; margin-bottom:16px;">Tipi di Custodia</h3>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:24px 0;" class="fade-in-up">
+      <div style="background:var(--surface); border:1px solid rgba(200,80,60,0.3); border-radius:10px; padding:24px;">
+        <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#E06060; margin-bottom:10px;">⚠ Custodiale</div>
+        <p style="font-size:0.9rem; color:var(--text-muted);">La tua chiave privata è conservata da terzi (exchange). Più facile da configurare, ma dipendi da un fornitore. Il crollo di FTX nel 2022 ha fatto sparire miliardi in fondi clienti. Balances possono essere congelati o persi se l'intermediario fallisce o cede alla pressione politica.</p>
+      </div>
+      <div style="background:var(--surface); border:1px solid rgba(100,200,100,0.3); border-radius:10px; padding:24px;">
+        <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#6FCF8A; margin-bottom:10px;">✓ Auto-Custodia</div>
+        <p style="font-size:0.9rem; color:var(--text-muted);">La chiave privata è direttamente sotto il tuo controllo. Richiede più responsabilità, ma nessuna istituzione controllata da regimi autoritari può bloccare le transazioni o confiscare i fondi unilateralmente. Questo è ciò che ti rende inarrestabile.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.4rem; margin-bottom:16px;">Hot Wallet vs Cold Wallet</h3>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:24px 0;" class="fade-in-up">
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px;">
+        <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); margin-bottom:8px;">🔥 Hot Wallet</div>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:12px;">Le chiavi private sono su dispositivi connessi a Internet (telefono, app desktop). Facili da usare, adatti per transazioni frequenti, ma l'esposizione online aumenta i rischi di phishing e malware.</p>
+        <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--text-muted);">Come contanti in tasca: comodi per la spesa quotidiana, ma non tenerci i risparmi di una vita.</div>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px;">
+        <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); margin-bottom:8px;">❄️ Cold Wallet</div>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:12px;">Le chiavi private sono offline, tipicamente su hardware dedicato. Maggiore protezione contro gli attacchi online, più adatto per riserve a lungo termine e saldi elevati.</p>
+        <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--text-muted);">Come una cassaforte: più difficile da accedere rapidamente, ma molto più difficile per chiunque altro.</div>
+      </div>
+    </div>
+
+    <div class="callout fade-in-up">
+      <strong>Setup pratico consigliato:</strong> Molte organizzazioni combinano entrambi gli approcci — un hot wallet per l'attività di routine e saldi piccoli, e un cold wallet per le riserve a lungo termine. Il rapporto dipende dalla frequenza delle transazioni e dall'importo detenuto.
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.4rem; margin-bottom:16px;">Portafogli Multifirma (Multisig)</h3>
+
+    <p class="fade-in-up">La maggior parte dei portafogli concentra il controllo in un unico set di mani. Per le organizzazioni che gestiscono fondi condivisi, questa concentrazione è rischiosa. Cosa succede se la persona che detiene le chiavi viene arrestata?</p>
+
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; margin:24px 0;" class="fade-in-up">
+      <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+        <div style="text-align:center; padding:16px;">
+          <div style="font-family:'DM Mono',monospace; font-size:1.8rem; color:var(--gold);">2 di 3</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Setup comune</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <p style="font-size:0.9rem; color:var(--text-muted);">In un setup 2-di-3, tre persone detengono ciascuna una chiave, e qualsiasi due devono "firmare" e approvare un pagamento. Puoi progettare 3-di-5, 5-di-7 e così via. Nessun individuo muove i fondi da solo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.4rem; margin-bottom:16px;">Come Acquistare e Convertire Bitcoin</h3>
+
+    <div class="attributes-list fade-in-up">
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">A</div>
+          <div class="attr-title-text">Exchange Centralizzati</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Piattaforme online come Binance, Coinbase, Kraken. Veloci, liquide e facili da usare. Tuttavia, richiedono verifica dell'identità e conto bancario collegato. Quando le autorità nigeriane hanno colpito l'attività di criptovalute nel 2023, sono andate direttamente agli exchange perché avevano le liste degli utenti. Usare con cautela in ambienti a rischio.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">B</div>
+          <div class="attr-title-text">Scambi Peer-to-Peer (P2P)</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Spesso l'opzione più affidabile in molti paesi. A Caracas, un modo comune per acquistare bitcoin è attraverso un messaggio WhatsApp a un contatto fidato. Il trader risponde con un prezzo, ci si incontra in un caffè, si consegnano bolívares e in minuti il bitcoin appare nel portafoglio. Nessun controllo d'identità, nessuna banca coinvolta. Piattaforme: Hodl Hodl, LocalCoinSwap, Bisq, RoboSats, Vexl.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">C</div>
+          <div class="attr-title-text">Bitcoin ATM</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Macchine fisiche dove è possibile acquistare e vendere bitcoin usando contanti o carte. Ci sono più di 38.000 di questi ATM installati in tutto il mondo. Si avvicina, si inserisce il contante, si scansiona il codice QR del portafoglio e il bitcoin arriva sul telefono. Alcuni ATM Bitcoin (come quelli a Hong Kong) non richiedono ID. Le commissioni sono generalmente del 5-15%, superiori agli exchange online.</div>
+        </div>
+      </div>
+      <div class="attr-item" onclick="toggleAttr(this)">
+        <div class="attr-header">
+          <div class="attr-num">D</div>
+          <div class="attr-title-text">Voucher Bitcoin (es. Azteco)</div>
+          <div class="attr-arrow">▶</div>
+        </div>
+        <div class="attr-body">
+          <div class="attr-content">Acquistati con contanti e riscattati direttamente in un portafoglio auto-custodia. Invece di depositare denaro su un exchange, si acquista un codice voucher — come acquistare una scheda telefonica prepagata — e si carica il bitcoin direttamente. Particolarmente utili in ambienti ad alta liquidità di contanti o dove l'accesso bancario è limitato.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 class="fade-in-up" style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.4rem; margin-bottom:16px;">Lightning Network</h3>
+
+    <p class="fade-in-up">Per pagamenti piccoli, veloci — dalle spese locali al supporto d'emergenza ai micropagamenti transfrontalieri — la <strong>Lightning Network</strong> permette di inviare bitcoin in secondi con commissioni molto basse.</p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:12px; margin:24px 0;" class="fade-in-up">
+      <div class="repression-card">
+        <div class="repression-icon">💸</div>
+        <div class="repression-title">Piccole donazioni</div>
+        <div class="repression-text">Ricevi piccole donazioni da sostenitori in tutto il mondo istantaneamente</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">⚡</div>
+        <div class="repression-title">Pagamenti urgenti</div>
+        <div class="repression-text">Invia fondi d'emergenza quando ore e minuti contano, durante crisi</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">🌍</div>
+        <div class="repression-title">Pagamenti cross-border</div>
+        <div class="repression-text">Sposta fondi operativi tra team in paesi diversi</div>
+      </div>
+      <div class="repression-card">
+        <div class="repression-icon">🔒</div>
+        <div class="repression-title">Micropagamenti privati</div>
+        <div class="repression-text">Pagamenti discreti quando la sorveglianza è una preoccupazione</div>
+      </div>
+    </div>
+
+    <div class="callout fade-in-up">
+      <strong>Pensa alla Lightning come contanti nel portafoglio</strong>, mentre Bitcoin on-chain è il tuo conto risparmio. Non è progettata per conservare grandi riserve.
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="section" id="casistiche">
+  <div class="container">
+    <div class="section-label">05 · Casi Studio</div>
+    <h2 class="section-title fade-in-up">Bitcoin in Prima Linea</h2>
+
+    <p class="fade-in-up" style="color:var(--text-muted); margin-bottom:32px;">Attivisti, ONG e gruppi della società civile stanno già usando Bitcoin quando le vie finanziarie si restringono. Questi sono esempi concreti di cosa succede quando le organizzazioni si rifiutano di lasciare che i regimi autoritari controllino il loro denaro.</p>
+
+    <div class="cases-nav fade-in-up">
+      <button class="case-tab active" onclick="switchCase('russia')">🇷🇺 Russia</button>
+      <button class="case-tab" onclick="switchCase('ukraine')">🇺🇦 Ucraina</button>
+      <button class="case-tab" onclick="switchCase('venezuela')">🇻🇪 Venezuela</button>
+      <button class="case-tab" onclick="switchCase('global')">🌍 Globale</button>
+      <button class="case-tab" onclick="switchCase('afghanistan')">🇦🇫 Afghanistan</button>
+      <button class="case-tab" onclick="switchCase('togo')">🇹🇬 Togo</button>
+      <button class="case-tab" onclick="switchCase('palestine')">🇵🇸 Palestina</button>
+    </div>
+
+    <div id="case-russia" class="case-panel active fade-in-up">
+      <div class="case-card">
+        <div class="case-country">Russia · Fondazione Anti-Corruzione</div>
+        <div class="case-title">La Rete di Sicurezza che Ha Tenuto Viva la Resistenza</div>
+        <div class="case-body">
+          <p>Fondata nel 2011 da Alexei Navalny, la Fondazione Anti-Corruzione si è proposta di fare qualcosa di pericoloso nella Russia di Putin: indagare ed esporre pubblicamente la corruzione che sostiene il regime. Le loro indagini hanno raggiunto centinaia di milioni di spettatori — un singolo film che documenta un lussuoso palazzo costruito per Putin è stato visto più di 100 milioni di volte.</p>
+          <p>La fondazione iniziò ad accettare donazioni in Bitcoin come precauzione. Quella decisione si rivelò critica. <strong>Nel 2018, Putin bloccò i conti bancari della fondazione overnight</strong>. Perché l'infrastruttura Bitcoin era già in atto, la fondazione continuò a ricevere supporto finanziario e a pagare le spese fuori dai canali vulnerabili al controllo del Cremlino.</p>
+          <p>Nel 2021, quando la fondazione fu etichettata "organizzazione estremista" e donare ad essa divenne un reato penale punibile con fino a otto anni di prigione, Bitcoin permise ai sostenitori all'interno della Russia di donare senza che le loro banche lo sapessero — senza che i loro nomi apparissero su una lista governativa.</p>
+          <span class="case-stat">Conti bloccati overnight</span>
+          <span class="case-stat">Operativa grazie a Bitcoin</span>
+          <span class="case-stat">Donatori protetti dall'anonimato</span>
+        </div>
+        <div class="quote-block" style="margin-top:24px;">
+          <p class="quote-text">Il governo russo ha capito molto rapidamente che è il modo più facile per fermarci privandoci dell'accesso al denaro. Perché se non hai accesso al denaro, è come se fossi privato dell'ossigeno — non puoi pagare gli stipendi e le persone non possono lavorare.</p>
+          <p class="quote-author">— Anna Chekhovich, direttrice finanziaria della Fondazione Anti-Corruzione</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="case-ukraine" class="case-panel">
+      <div class="case-card">
+        <div class="case-country">Ucraina · Helping to Leave</div>
+        <div class="case-title">Salvare Vite Quando le Banche Falliscono</div>
+        <div class="case-body">
+          <p>Helping to Leave fornisce assistenza all'evacuazione e aiuti umanitari agli ucraini in fuga dalle zone di prima linea e dai territori occupati dalla Russia. Il lavoro è urgente, pericoloso e logisticamente complesso: coordinare autisti attraverso zone di conflitto attive, organizzare case sicure e attraversamenti di confine — tutto mentre la situazione sul campo cambia quotidianamente.</p>
+          <p>Nei primi mesi dell'invasione su larga scala, i servizi bancari in gran parte dell'Ucraina orientale e meridionale sono collassati. Carrying grandi somme di contanti espone sia il personale che i rifugiati a sequestri ai checkpoint. <strong>Helping to Leave usa Bitcoin per spostare fondi rapidamente e in modo sicuro</strong> senza fare affidamento su sistemi bancari locali sorvegliati o inaccessibili in tempo di guerra.</p>
+          <span class="case-stat">21.300+ persone evacuate</span>
+          <span class="case-stat">$300.000+ in Bitcoin utilizzati</span>
+          <span class="case-stat">Dal 2022 in operazione continua</span>
+        </div>
+        <div class="quote-block" style="margin-top:24px;">
+          <p class="quote-text">Nel nostro caso, Bitcoin è un mezzo di sopravvivenza per le persone che hanno bisogno del nostro aiuto. Non è speculazione. E dove le banche falliscono e il contante è rischioso, abilita azione, sicurezza e libertà.</p>
+          <p class="quote-author">— Daria Rabinovitsch, Co-CEO di Helping to Leave</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="case-venezuela" class="case-panel">
+      <div class="case-card">
+        <div class="case-country">Venezuela · Voluntad Popular</div>
+        <div class="case-title">Bitcoin come Infrastruttura per la Democrazia</div>
+        <div class="case-body">
+          <p>Dal 2008, i leader e gli attivisti dell'opposizione sono stati progressivamente esclusi dal sistema bancario venezuelano. Il regime ha chiuso conti senza spiegazioni, bloccato trasferimenti e congelato donazioni. Il messaggio era inconfondibile: il dissenso non sarebbe solo criminalizzato, sarebbe economicamente soffocato.</p>
+          <p>Durante le <strong>elezioni presidenziali del 2024</strong>, Bitcoin è diventato infrastruttura operativa per la democrazia. Ha supportato i volontari che sorvegliavano i seggi, coordinato gli osservatori civici e assicurato la tabulazione parallela dei voti. In un ambiente dove i bonifici bancari potevano innescare sorveglianza o ritorsioni, Bitcoin ha permesso alla società civile e ai sostenitori della democrazia di continuare il loro lavoro senza timore di blocchi finanziari.</p>
+          <p>Sebbene il regime di Maduro abbia fraudolentemente rivendicato la vittoria, Bitcoin ha permesso all'opposizione democratica venezuelana di contare i risultati reali e condividerli con il mondo.</p>
+          <span class="case-stat">Iperinflazione oltre 1.000.000%</span>
+          <span class="case-stat">Elezioni 2024 supportate da Bitcoin</span>
+        </div>
+        <div class="quote-block" style="margin-top:24px;">
+          <p class="quote-text">Bitcoin fa parte del nuovo toolkit di resistenza nonviolenta. Dà alle persone il potere di riprendersi il loro futuro — quando i loro stessi governi preferirebbero vederle morire di fame piuttosto che essere libere.</p>
+          <p class="quote-author">— Leopoldo López, leader dell'opposizione venezuelana</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="case-global" class="case-panel">
+      <div class="case-card">
+        <div class="case-country">Globale · Save the Children</div>
+        <div class="case-title">Il Primo Fondo Bitcoin di una Grande ONG Internazionale</div>
+        <div class="case-body">
+          <p>A dicembre 2025, Save the Children ha lanciato un <strong>Fondo Bitcoin dedicato</strong>, progettato per detenere bitcoin donati fino a quattro anni invece di convertirli immediatamente in contanti. È il primo fondo di questo tipo in una grande ONG umanitaria internazionale.</p>
+          <p>Il periodo di detenzione di quattro anni è deliberato. Storicamente, Bitcoin non ha mai perso valore in nessun periodo di quattro anni. Invece di convertire immediatamente le donazioni bitcoin in dollari, l'organizzazione detiene il bitcoin e ne permette l'apprezzamento prima di impiegare i guadagni per aiutare più bambini.</p>
+          <p>Save the Children ha una storia decennale con Bitcoin. Nel 2013 era diventata la prima grande ONG umanitaria ad accettare donazioni in bitcoin. Nei decenni successivi ha raccolto milioni per assistere bambini colpiti da crisi in Ucraina, Gaza, Sudan e altrove.</p>
+          <span class="case-stat">Prima ONG ad accettare bitcoin (2013)</span>
+          <span class="case-stat">Fondo Bitcoin 4 anni (dic 2025)</span>
+          <span class="case-stat">100+ paesi di operazione</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="case-afghanistan" class="case-panel">
+      <div class="case-card">
+        <div class="case-country">Afghanistan · Digital Citizen Fund</div>
+        <div class="case-title">Il Primo Denaro Veramente Posseduto dalle Donne Afghane</div>
+        <div class="case-body">
+          <p>In molte comunità conservative dell'Afghanistan, le donne erano impedite di guadagnare, ricevere o controllare il proprio reddito. I salari delle donne venivano spesso intercettati o controllati da familiari maschi. Una donna poteva guadagnare uno stipendio, ma il denaro passava per le mani del padre o del marito prima che lei lo vedesse — se mai lo vedeva.</p>
+          <p>Nel 2013, Roya Mahboob iniziò a pagare alcune sue dipendenti in Bitcoin. <strong>Per la prima volta, potevano ricevere i salari direttamente</strong>, senza fare affidamento su tutori maschi, banche locali o altri intermediari. Abbinò i pagamenti a una formazione pratica sui portafogli digitali, le chiavi private e la custodia personale.</p>
+          <p>Per una dipendente, Bitcoin divenne una salvezza quando fu costretta a fuggire dall'Afghanistan verso l'Europa. Perse quasi tutto: casa, comunità, documenti, beni. Ma riuscì a portare il suo Bitcoin, protetto da una frase seed, attraverso i confini — indenne dal caos che stava sfuggendo. Quei fondi la aiutarono a ricostruire la sua vita in Germania.</p>
+          <span class="case-stat">Primo pagamento stipendio in Bitcoin</span>
+          <span class="case-stat">Scuole clandestine finanziate con Bitcoin</span>
+        </div>
+        <div class="quote-block" style="margin-top:24px;">
+          <p class="quote-text">Bitcoin rappresenta la prima opportunità che molte donne afghane hanno mai avuto di possedere asset finanziari in modo indipendente — non attraverso padri, fratelli o mariti.</p>
+          <p class="quote-author">— Roya Mahboob, fondatrice del Digital Citizen Fund</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="case-togo" class="case-panel">
+      <div class="case-card">
+        <div class="case-country">Togo · Farida Nabourema</div>
+        <div class="case-title">Libertà Finanziaria oltre il Franco CFA e la Dittatura</div>
+        <div class="case-body">
+          <p>Farida Nabourema è un'attivista e scrittrice togolese per i diritti umani e la democrazia. Ha a lungo sostenuto che il franco CFA funzioni come valuta coloniale che aiuta la Francia a mantenere il dominio economico sul paese — il 50% delle riserve estere del Togo è detenuto dal Tesoro francese a Parigi.</p>
+          <p>Mentre il regime dei Gnassingbé intensificava la pressione sui dissidenti, Nabourema iniziò a cercare alternative alle banche controllate dallo stato. Bitcoin fu la risposta.</p>
+          <p>Attraverso il suo programma <strong>Bitcoin for Youngsters</strong> in Ghana, ha insegnato a più di 3.000 studenti l'indipendenza finanziaria attraverso Bitcoin. Ha anche fondato l'Africa Bitcoin Conference, creando uno spazio annuale dove attivisti, giornalisti e leader comunitari dell'intero continente imparano come gli strumenti finanziari alternativi possano ridurre la dipendenza da infrastrutture vulnerabili al controllo autoritario.</p>
+          <p>Attraverso il <strong>Kisaw Agricultural Project</strong>, un programma di microcredito comunitario nel Togo rurale, gli agricoltori locali accedono a finanziamenti tramite l'app Fedi per acquistare sementi e fertilizzanti che aumentano i raccolti — centinaia di chilometri dalla banca funzionante più vicina.</p>
+          <span class="case-stat">3.000+ studenti formati</span>
+          <span class="case-stat">Microcrediti agricoli via Bitcoin</span>
+          <span class="case-stat">Africa Bitcoin Conference</span>
+        </div>
+        <div class="quote-block" style="margin-top:24px;">
+          <p class="quote-text">Da quando abbiamo iniziato a usare Bitcoin nel 2018, tutto è cambiato. Ora possiamo ricevere Bitcoin, scambiarlo attraverso piattaforme locali e convertirlo in contanti — tutto senza destare sospetti.</p>
+          <p class="quote-author">— Farida Nabourema</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="case-palestine" class="case-panel">
+      <div class="case-card">
+        <div class="case-country">Palestina · Fadi Elsalameen</div>
+        <div class="case-title">Attraversare i Checkpoint Finanziari</div>
+        <div class="case-body">
+          <p>Fadi Elsalameen è un attivista palestinese noto per aver esposto la corruzione all'interno dell'Autorità Palestinese (AP). Il suo attivismo lo ha reso un bersaglio di intimidazioni e molestie legali, tra cui un caso di riciclaggio di denaro fabbricato.</p>
+          <p>I palestinesi non controllano la propria valuta — usano lo shekel israeliano secondo regole monetarie stabilite dal Protocollo di Parigi del 1994. Hamas e l'AP impongono intense restrizioni interne, mentre Israele controlla l'infrastruttura bancaria. Non c'è PayPal, non c'è Venmo, non c'è modo semplice per i palestinesi di ricevere denaro dall'estero.</p>
+          <p>Un bonifico da $500 dall'Europa a Ramallah può costare $30-40 in commissioni, impiegare settimane ad arrivare ed essere segnalato o confiscato lungo il percorso. Elsalameen si è rivolto a Bitcoin per ricevere supporto dall'estero senza fare affidamento su intermediari che ritardano, sorvegliano o bloccano le transazioni.</p>
+          <p>Oggi Elsalameen integra Bitcoin nel suo lavoro di advocacy e istruzione, insegnando agli studenti e ai gruppi della società civile come usare i portafogli e preservare l'accesso finanziario durante crisi politiche, finanziarie e umanitarie.</p>
+          <span class="case-stat">Fondi accessibili durante il conflitto</span>
+          <span class="case-stat">Istruzione su wallet e auto-custodia</span>
+        </div>
+        <div class="quote-block" style="margin-top:24px;">
+          <p class="quote-text">È così che riconquistiamo il nostro futuro — un portafoglio alla volta.</p>
+          <p class="quote-author">— Fadi Elsalameen</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MITI -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">05b · Falsi Miti</div>
+    <h2 class="section-title fade-in-up">Sfatiamo i Miti su Bitcoin</h2>
+    <p class="fade-in-up" style="color:var(--text-muted); margin-bottom:24px;">Bitcoin è una delle tecnologie più fraintese al mondo. Ecco le risposte dirette ai miti più persistenti.</p>
+
+    <div class="myths-list fade-in-up">
+      <div class="myth-item" onclick="toggleMyth(this)">
+        <div class="myth-header">
+          <div class="myth-label">Mito 1</div>
+          <div class="myth-question">"Bitcoin è solo per i criminali"</div>
+          <div class="myth-arrow">▶</div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-content">
+            <p>Chiunque può usare Bitcoin. Questa è la sua superpotenza. La stessa proprietà che permette a un trafficante di transare senza una banca permette anche a un giornalista in Birmania di ricevere fondi d'emergenza quando ogni banca del paese è stata chiusa dalla giunta militare.</p>
+            <p>I regimi autoritari etichettano regolarmente i gruppi per i diritti umani come criminali per restringere il loro lavoro. Alexei Navalny, ad esempio, era considerato un criminale ed estremista dal regime di Putin, ma poteva usare Bitcoin.</p>
+            <p>Inoltre, Bitcoin non è il modo migliore per spostare le grandi somme necessarie alle grandi organizzazioni criminali. Per il riciclaggio su larga scala, il sistema bancario tradizionale rimane lo strumento di scelta — HSBC, Deutsche Bank e Danske Bank hanno ciascuna pagato miliardi di multe per aver facilitato esattamente questo tipo di attività.</p>
+          </div>
+        </div>
+      </div>
+      <div class="myth-item" onclick="toggleMyth(this)">
+        <div class="myth-header">
+          <div class="myth-label">Mito 2</div>
+          <div class="myth-question">"Bisogna essere esperti di tecnologia per usare Bitcoin"</div>
+          <div class="myth-arrow">▶</div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-content">
+            <p>Se puoi usare WhatsApp, puoi inviare e ricevere bitcoin. I portafogli moderni sono progettati per essere intuitivi, con interfacce pulite che nascondono la complessità crittografica sottostante.</p>
+            <p>Molte ONG iniziano senza alcuna formazione tecnica e, con gli strumenti e la guida giusti, ora ricevono, conservano e inviano regolarmente bitcoin. Per loro, non è più complicato di qualsiasi altra app sul telefono. C'è ancora una curva di apprendimento, ma si misura in ore, non in mesi.</p>
+          </div>
+        </div>
+      </div>
+      <div class="myth-item" onclick="toggleMyth(this)">
+        <div class="myth-header">
+          <div class="myth-label">Mito 3</div>
+          <div class="myth-question">"Bitcoin è troppo volatile per essere utile come denaro"</div>
+          <div class="myth-arrow">▶</div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-content">
+            <p>In ambienti dove la valuta locale sta collassando, dove sono in vigore controlli valutari, dove l'accesso bancario è limitato o i conti sono congelati, la volatilità è un rischio minore rispetto al non avere affatto denaro accessibile.</p>
+            <p>Le ONG possono gestire questi rischi convertendo bitcoin in valuta locale quando necessario, detenendolo brevemente prima di spenderlo, o combinandolo con stablecoin. Vale la pena notare che <strong>in qualsiasi periodo di quattro anni della sua storia, Bitcoin non ha mai perso valore</strong>. Malgrado la significativa volatilità a breve termine, la traiettoria a lungo termine della valuta è stata costantemente ascendente — dai centesimi a oltre $100.000.</p>
+          </div>
+        </div>
+      </div>
+      <div class="myth-item" onclick="toggleMyth(this)">
+        <div class="myth-header">
+          <div class="myth-label">Mito 4</div>
+          <div class="myth-question">"I governi lo vieteranno semplicemente"</div>
+          <div class="myth-arrow">▶</div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-content">
+            <p>Poiché Bitcoin non dipende da nessun singolo paese, banca o azienda per operare, un divieto non spegne il sistema. Anche quando i governi hanno limitato l'accesso, le persone hanno continuato a usarlo tramite exchange peer-to-peer, portafogli mobili e metodi di accesso alternativi.</p>
+            <p>Nigeria, Cina e Russia — paesi con politiche molto restrittive — hanno anche alcuni dei livelli più alti di utilizzo di Bitcoin, proprio perché le persone cercano alternative ai sistemi finanziari così strettamente controllati. Dopo che la Nigeria ha limitato i trasferimenti bancari alle piattaforme di criptovalute nel 2021, il volume di trading Bitcoin peer-to-peer nel paese è effettivamente aumentato. Un divieto rende l'accesso più difficile, ma non fa smettere di funzionare Bitcoin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RISCHI -->
+<section class="section" id="rischi">
+  <div class="container">
+    <div class="section-label">06 · Rischi e Sfide</div>
+    <h2 class="section-title fade-in-up">Rischi da Conoscere</h2>
+
+    <p class="fade-in-up">Bitcoin è uno strumento vitale, ma non è privo di rischi. Le organizzazioni che lo usano accettano questi rischi perché hanno determinato che l'alternativa — fidarsi di un sistema finanziario progettato per escluderle — è peggio. Capire i rischi in anticipo permette decisioni deliberate.</p>
+
+    <div class="risks-grid fade-in-up">
+      <div class="risk-card">
+        <div class="risk-icon">📊</div>
+        <div class="risk-title">Volatilità</div>
+        <div class="risk-text">Il valore di Bitcoin può cambiare rapidamente. Una donazione ricevuta oggi può valere il 15% in più la prossima settimana, o il 15% in meno. Strumenti come AQUA consentono di scambiare facilmente Bitcoin in stablecoin per chi preferisce stabilità nel breve termine.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-icon">🔐</div>
+        <div class="risk-title">Rischi di Sicurezza</div>
+        <div class="risk-text">Con l'auto-custodia viene la responsabilità. Chiavi private perse, frasi di recupero compromesse o attacchi di phishing possono tagliare permanentemente l'accesso ai fondi. Si stima che miliardi di dollari in bitcoin siano stati persi definitivamente perché gli utenti dimenticavano le password.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-icon">⚖️</div>
+        <div class="risk-title">Questioni Legali e di Conformità</div>
+        <div class="risk-text">La regolamentazione di Bitcoin varia tra le giurisdizioni e continua ad evolversi. A seconda di dove opera la tua ONG, l'uso può innescare obblighi di rendicontazione, registrazione o fiscali. Consulta professionisti legali qualificati prima di adottare Bitcoin.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-icon">🎭</div>
+        <div class="risk-title">Rischi Reputazionali</div>
+        <div class="risk-text">Bitcoin è ancora incompreso in molti ambienti. Donatori o partner possono mettere in dubbio perché la tua organizzazione lo usa. La comunicazione chiara aiuta: spiega le tue ragioni e le salvaguardie di custodia. Diverse organizzazioni hanno scoperto che la trasparenza attrae nuovi donatori dalla comunità Bitcoin.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-icon">⚙️</div>
+        <div class="risk-title">Sfide Operative</div>
+        <div class="risk-text">Adottare Bitcoin cambia i flussi di lavoro interni. Le organizzazioni devono assegnare responsabilità, documentare procedure e definire controlli di accesso. Qualcuno deve possedere il processo di backup della frase di recupero. Qualcuno deve sapere cosa fare se un dispositivo viene perso o compromesso.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRUMENTI -->
+<section class="section" id="strumenti">
+  <div class="container">
+    <div class="section-label">07 · Strumenti Consigliati</div>
+    <h2 class="section-title fade-in-up">Portafogli ed Exchange Consigliati</h2>
+
+    <p class="fade-in-up" style="color:var(--text-muted); margin-bottom:24px;">Gli strumenti elencati sono una selezione curata pensata per ONG e società civile. Ogni strumento è open-source, attivamente mantenuto, rispettoso della privacy e auto-custodia.</p>
+
+    <div class="tools-categories fade-in-up">
+      <button class="tool-filter active" onclick="filterTools('all', this)">Tutti</button>
+      <button class="tool-filter" onclick="filterTools('hot', this)">🔥 Hot Wallet</button>
+      <button class="tool-filter" onclick="filterTools('cold', this)">❄️ Cold Wallet</button>
+      <button class="tool-filter" onclick="filterTools('p2p', this)">🤝 Exchange P2P</button>
+    </div>
+
+    <div class="tools-grid fade-in-up" id="toolsGrid">
+      <div class="tool-card" data-cat="hot">
+        <div class="tool-category-tag">🔥 Hot Wallet</div>
+        <div class="tool-name">Muun</div>
+        <div class="tool-desc">Portafoglio mobile Bitcoin focalizzato sulla facilità d'uso, costruito a Buenos Aires — dove i controlli valutari e l'inflazione sono una realtà quotidiana. Disponibile in inglese e spagnolo.</div>
+        <a class="tool-link" href="https://muun.com/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="hot">
+        <div class="tool-category-tag">🔥 Hot Wallet</div>
+        <div class="tool-name">BlueWallet</div>
+        <div class="tool-desc">Portafoglio Bitcoin e Lightning per mobile e desktop con funzionalità di privacy e supporto multisig. Disponibile in più di 30 lingue, tra cui arabo, farsi e ucraino.</div>
+        <a class="tool-link" href="https://bluewallet.io/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="hot">
+        <div class="tool-category-tag">🔥 Hot Wallet</div>
+        <div class="tool-name">AQUA</div>
+        <div class="tool-desc">Portafoglio mobile che supporta Bitcoin e Lightning con supporto integrato per lo scambio tra bitcoin e stablecoin. Progettato originariamente per gli attivisti latinoamericani che navigano controlli valutari e iperinflazione.</div>
+        <a class="tool-link" href="https://aqua.net/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="hot">
+        <div class="tool-category-tag">🔥 Hot Wallet</div>
+        <div class="tool-name">BULL Wallet</div>
+        <div class="tool-desc">Portafoglio mobile Bitcoin e Lightning con funzionalità di privacy per rendere più difficile la sorveglianza finanziaria. Sistema a portafogli graduati adatto sia ai principianti che agli utenti avanzati.</div>
+        <a class="tool-link" href="https://wallet.bullbitcoin.com/en" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="cold">
+        <div class="tool-category-tag">❄️ Cold Wallet</div>
+        <div class="tool-name">COLDCARD</div>
+        <div class="tool-desc">Hardware wallet progettato per la massima sicurezza, costruito in Canada. Sembra una vecchia calcolatrice — praticamente invisibile a un checkpoint di confine. Supporta uso air-gapped tramite SD card e funziona come chiave in un wallet multisig.</div>
+        <a class="tool-link" href="https://coldcard.com/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="cold">
+        <div class="tool-category-tag">❄️ Cold Wallet</div>
+        <div class="tool-name">Trezor</div>
+        <div class="tool-desc">Uno dei portafogli hardware originali, fondato nel 2014 a Praga. Supporta Bitcoin e altre criptovalute con multisig. Connessione USB pratica per uso quotidiano con configurazione semplice.</div>
+        <a class="tool-link" href="https://trezor.io/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="cold">
+        <div class="tool-category-tag">❄️ Cold Wallet</div>
+        <div class="tool-name">Bitkey</div>
+        <div class="tool-desc">Hardware wallet con protezione dalla perdita delle chiavi, creato dall'azienda dietro Cash App. Usa un multisig 2-di-3. Scelta pratica per le ONG che cercano usabilità abbinata a resilienza contro la perdita delle chiavi.</div>
+        <a class="tool-link" href="https://bitkey.world/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="cold">
+        <div class="tool-category-tag">❄️ Cold Wallet</div>
+        <div class="tool-name">SeedSigner</div>
+        <div class="tool-desc">Hardware wallet assemblato da un Raspberry Pi Zero, un modulo camera e un piccolo schermo — tutti disponibili in qualsiasi negozio elettronico per meno di $50. Praticamente invisibile a un checkpoint di confine. Supporta multisig e più lingue.</div>
+        <a class="tool-link" href="https://seedsigner.com/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="p2p">
+        <div class="tool-category-tag">🤝 Exchange P2P</div>
+        <div class="tool-name">Hodl Hodl</div>
+        <div class="tool-desc">Exchange P2P Bitcoin globale che non richiede né ID né conto bancario. Utile in ambienti repressivi o poco serviti. Offre anche prestito e prestito di Bitcoin in alcune regioni.</div>
+        <a class="tool-link" href="https://hodlhodl.com/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="p2p">
+        <div class="tool-category-tag">🤝 Exchange P2P</div>
+        <div class="tool-name">RoboSats</div>
+        <div class="tool-desc">Exchange P2P Bitcoin focalizzato sulla privacy, usa Lightning e opera su Tor per impostazione predefinita. Nessun account o registrazione richiesta. Usa avatar robot invece di nomi utente, aggiungendo un livello di anonimato.</div>
+        <a class="tool-link" href="https://learn.robosats.org/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="p2p">
+        <div class="tool-category-tag">🤝 Exchange P2P</div>
+        <div class="tool-name">Bisq</div>
+        <div class="tool-desc">Exchange P2P Bitcoin desktop senza registrazione né ID richiesto. Opera su Tor con crittografia end-to-end. Uno degli exchange decentralizzati più vecchi e fidati nell'ecosistema Bitcoin. Ottima privacy per ambienti molto sorvegliati.</div>
+        <a class="tool-link" href="https://bisq.network/" target="_blank">Scopri →</a>
+      </div>
+      <div class="tool-card" data-cat="p2p">
+        <div class="tool-category-tag">🤝 Exchange P2P</div>
+        <div class="tool-name">Vexl</div>
+        <div class="tool-desc">Marketplace P2P Bitcoin mobile basato su un modello "web-of-trust". Connette gli utenti tramite i contatti del telefono e gli amici degli amici, permettendo acquisto e vendita diretto all'interno della comunità locale senza requisiti KYC.</div>
+        <a class="tool-link" href="https://vexl.it/" target="_blank">Scopri →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEST PRACTICES -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">08 · Buone Pratiche</div>
+    <h2 class="section-title fade-in-up">Come Iniziare in Sicurezza</h2>
+
+    <p class="fade-in-up" style="color:var(--text-muted); margin-bottom:8px;">Ogni organizzazione in questa guida ha iniziato allo stesso modo: nervosa, scettica, con una piccola quantità di bitcoin. Ecco i principi fondamentali.</p>
+
+    <div class="practices-grid fade-in-up">
+      <div class="practice-item">
+        <div class="practice-num">01</div>
+        <div class="practice-content">
+          <div class="practice-title">Testa con importi piccoli</div>
+          <div class="practice-desc">Configura un portafoglio e ricevi un piccolo importo di prova. Esercitati a inviare fondi e ripristinare l'accesso prima di gestire saldi significativi. Fai errori con denaro che puoi permetterti di perdere.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">02</div>
+        <div class="practice-content">
+          <div class="practice-title">Scegli il portafoglio giusto</div>
+          <div class="practice-desc">Comprendi le differenze tra auto-custodia e soluzioni custodiali. Seleziona un portafoglio che corrisponda alla tua capacità tecnica e alle tue esigenze operative.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">03</div>
+        <div class="practice-content">
+          <div class="practice-title">Forma il personale</div>
+          <div class="practice-desc">Assegna la custodia a un gruppo fidato. Designa almeno due persone che comprendano l'intera configurazione di custodia. Insegna le basi: portafogli, frasi di recupero, pratiche di privacy.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">04</div>
+        <div class="practice-content">
+          <div class="practice-title">Struttura interna</div>
+          <div class="practice-desc">Decidi quando i fondi vengono conservati o convertiti. Documenta chi approva le transazioni e come è condivisa la custodia. Rivedi queste strutture ogni trimestre.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">05</div>
+        <div class="practice-content">
+          <div class="practice-title">Separa le responsabilità</div>
+          <div class="practice-desc">Non concentrare mai la piena custodia in una singola persona. Usa multisig per distribuire fiducia e rischio. Se una sola persona detiene le chiavi e viene arrestata, i tuoi fondi saranno inaccessibili quanto se una banca li avesse congelati.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">06</div>
+        <div class="practice-content">
+          <div class="practice-title">Proteggi la frase seed offline</div>
+          <div class="practice-desc">Non conservare backup in servizi cloud, bozze email o app di note. Usa backup offline e criptati su dispositivi sicuri. Un foglio di carta in una cassaforte ignifuga è più sicuro di un file criptato su Google Drive — gli oggetti fisici non possono essere violati da remoto.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">07</div>
+        <div class="practice-content">
+          <div class="practice-title">Evita il riuso degli indirizzi</div>
+          <div class="practice-desc">Usa un nuovo indirizzo di ricezione per ogni pagamento. La maggior parte dei portafogli lo fa automaticamente. Se un'ONG usa un unico indirizzo statico, chiunque può vedere il suo saldo totale e ogni transazione effettuata.</div>
+        </div>
+      </div>
+      <div class="practice-item">
+        <div class="practice-num">08</div>
+        <div class="practice-content">
+          <div class="practice-title">Pianifica per le emergenze</div>
+          <div class="practice-desc">Crea procedure di recupero per dispositivi persi, rotazione del personale o accesso compromesso. Effettua il processo di recupero almeno una volta prima di averne bisogno.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROAD AHEAD -->
+<section class="section" id="road">
+  <div class="container">
+    <div class="section-label">09 · La Strada Avanti</div>
+    <h2 class="section-title fade-in-up">Diventa Inarrestabile</h2>
+
+    <div class="intro-box fade-in-up">
+      <p>Ogni anno, più regimi autoritari tentano di silenziare il dissenso tagliando l'accesso al denaro per coloro che alzano la voce. Ora, un numero crescente di ONG e attivisti stanno scoprendo gli strumenti per resistere alla repressione finanziaria.</p>
+      <p>Come ha mostrato questa guida, le organizzazioni che affrontano questa pressione stanno già usando Bitcoin in modi pratici per proteggere le loro missioni e continuare a servire le loro comunità. A Mosca, Caracas, Kabul e Lomé, le persone stanno costruendo infrastrutture finanziarie che nessun dittatore controlla.</p>
+      <p><strong>Bitcoin offre alla società civile sotto pressione tirannica qualcosa di semplice ma potente: scelta.</strong> Scelta su come il denaro viene conservato, su come si muove e su come le organizzazioni difendono la loro capacità di funzionare. Per la prima volta, l'accesso finanziario non deve dipendere dal permesso — e questo cambia tutto per le ONG che lavorano sotto le dittature.</p>
+    </div>
+
+    <div class="stat-row fade-in-up">
+      <div class="stat-label"><span>Bitcoin adottato globalmente</span><span>20%+</span></div>
+      <div class="stat-bar"><div class="stat-fill" style="--w:0.2"></div></div>
+    </div>
+    <div class="stat-row fade-in-up">
+      <div class="stat-label"><span>ONG che usano Bitcoin per donazioni</span><span>Crescita rapida</span></div>
+      <div class="stat-bar"><div class="stat-fill" style="--w:0.45"></div></div>
+    </div>
+    <div class="stat-row fade-in-up">
+      <div class="stat-label"><span>Performance storica vs valute fiat (10 anni)</span><span>Migliore asset</span></div>
+      <div class="stat-bar"><div class="stat-fill" style="--w:0.92"></div></div>
+    </div>
+
+    <div style="text-align:center; margin-top:60px;" class="fade-in-up">
+      <div style="font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--gold); margin-bottom:16px;">₿</div>
+      <div style="font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--white); margin-bottom:12px;">Il prossimo passo spetta a te.</div>
+      <div style="color:var(--text-muted); max-width:480px; margin:0 auto; font-style:italic;">In Lagos, Ramallah, Minsk e oltre, attivisti e ONG stanno silenziosamente costruendo resilienza finanziaria. Gli strumenti ci sono. La conoscenza si diffonde. La scelta sta diventando reale.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div style="margin-bottom:16px;"><img src="avatar.png" alt="21 Milioni di Chiacchere" style="height:80px; width:auto;" /></div>
+  <div style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.1rem; margin-bottom:12px;">21 Milioni di Chiacchere</div>
+  <p class="footer-text">Guida su Bitcoin per le Organizzazioni Non Profit. Basato sulla ricerca della Human Rights Foundation (HRF). Ascolta il podcast su tutte le piattaforme.</p>
+  <p class="footer-source">Fonte originale: <a href="https://hrf.org/latest/bitcoin-for-nonprofits-a-guide-to-help-your-movement-achieve-financial-freedom/" target="_blank">hrf.org ↗</a> · Human Rights Foundation</p>
+</footer>
+
+<script>
+  // STICKY HEADER
+  const header = document.getElementById('stickyHeader');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) header.classList.add('visible');
+    else header.classList.remove('visible');
+  });
+
+  // INTERSECTION OBSERVER
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        // Animate stat bars
+        const fills = el.target.querySelectorAll ? el.target.querySelectorAll('.stat-fill') : [];
+        fills.forEach(f => {
+          const w = parseFloat(f.style.getPropertyValue('--w') || 0);
+          f.style.transform = `scaleX(${w})`;
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+  // Also animate stat bars when their parent becomes visible
+  document.querySelectorAll('.stat-row').forEach(row => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const fill = e.target.querySelector('.stat-fill');
+          if (fill) {
+            const w = parseFloat(fill.style.getPropertyValue('--w') || 0.5);
+            setTimeout(() => { fill.style.transform = `scaleX(${w})`; }, 200);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+    io.observe(row);
+  });
+
+  // ACCORDION - ATTRIBUTES
+  function toggleAttr(item) {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('#attrList .attr-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ACCORDION - MYTHS
+  function toggleMyth(item) {
+    item.classList.toggle('open');
+  }
+
+  // CASE STUDIES TABS
+  function switchCase(id) {
+    document.querySelectorAll('.case-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.case-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('case-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // BASICS TABS
+  function switchBasics(id) {
+    document.querySelectorAll('.basics-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.basics-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('basics-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // TOOLS FILTER
+  function filterTools(cat, btn) {
+    document.querySelectorAll('.tool-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tool-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.removeAttribute('data-hidden');
+        card.style.display = '';
+      } else {
+        card.setAttribute('data-hidden', 'true');
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
